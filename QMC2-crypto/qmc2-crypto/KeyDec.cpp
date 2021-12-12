@@ -69,7 +69,7 @@ void KeyDec::SetKey(const char* ekey, const size_t key_size)
 	decode_len = b64.decode(ekey, key_size, ekey_decoded.data());
 
 	if (decode_len != 0x210) {
-		fprintf(stderr, "ERROR: decoded key size is not 0x210, got %llx instead.\n", decode_len);
+		fprintf(stderr, "ERROR: decoded key size is not 0x210, got %x instead.\n", int(decode_len));
 		return;
 	}
 
