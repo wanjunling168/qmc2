@@ -38,8 +38,8 @@ size_t detect_key_end_position(uint8_t* buf, size_t size) {
 		// File format:
 		// [ encrypted_data ] [ base64_encoded_ekey ] [ ',' ] [ other_metadata ]
 
-		if (*(uint64_t*)(&buf[footer_detection_size - 8]) == 0x67615451CC020000
-			&& (buf[footer_detection_size - 8 - 1]) == '2')
+		if (*(uint64_t*)(&buf[size - 8]) == 0x67615451CC020000
+			&& (buf[size - 8 - 1]) == '2')
 		{
 			for (int i = 0; i < footer_detection_size; i++) {
 				if (buf[i] == ',') {
@@ -55,8 +55,8 @@ size_t detect_key_end_position(uint8_t* buf, size_t size) {
 	// Detection 2, eof magic 2
 	{
 		// eof magic: C0 02 00 00
-		if (*(uint32_t*)(&buf[footer_detection_size - 4]) == 0x000002C0) {
-			return footer_detection_size - 4;
+		if (*(uint32_t*)(&buf[size - 4]) == 0x000002C0) {
+			return size - 4;
 		}
 	}
 
