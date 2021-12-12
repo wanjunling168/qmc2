@@ -16,7 +16,7 @@ make
 
 ## 可执行文件下载
 
-Windows 版本需要最新的 VS2022 运行时。
+Windows 版本需要最新的 [VC++ x64 运行时][vs2022_runtime]。
 
 二进制文件可以在 [Release][latest_release] 区找到。
 
@@ -38,3 +38,4 @@ QMC2-decoder encrypted_file.mflac decrypted.flac
 [research]: https://gist.github.com/ix64/bcd72c151f21e1b050c9cc52d6ff27d5
 [unlock-music]: https://github.com/unlock-music/unlock-music
 [latest_release]: https://github.com/jixunmoe/qmc2/releases/latest
+[vs2022_runtime]: https://aka.ms/vs/17/release/vc_redist.x64.exe
