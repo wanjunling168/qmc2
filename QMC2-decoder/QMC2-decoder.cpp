@@ -66,7 +66,7 @@ size_t detect_key_end_position(uint8_t* buf, size_t size) {
 
 int main(int argc, char** argv)
 {
-	fprintf(stderr, "QMC2 decoder (cli) v0.2 by Jixun\n\n");
+	fprintf(stderr, "QMC2 decoder (cli) v0.0.2 by Jixun\n\n");
 
 	if (argc < 3)
 	{
