@@ -26,6 +26,9 @@ Windows 版本需要最新的 VS2022 运行时。
 QMC2-decoder encrypted_file.mflac decrypted.flac
 ```
 
+注：如果解密失败，可以尝试将文件名中的非 ASCII 字符去掉后尝试。
+    Linux 因为使用 UTF-8 编码因而没有该问题。
+
 ## 致谢
 
 - [2021/08/26 MGG/MFLAC研究进展][research] by @ix64 & @Akarinnnnn
