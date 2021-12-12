@@ -31,6 +31,39 @@ StreamCencrypt* createInstWidthEKey(const char* ekey_b64) {
 	return stream;
 }
 
+size_t detect_key_end_position(uint8_t* buf, size_t size) {
+	// Detection 1, eof magic 1
+	{
+		// eof magic: | 32 | 00 00 02 CC 51 54 61 67
+		// File format:
+		// [ encrypted_data ] [ base64_encoded_ekey ] [ ',' ] [ other_metadata ]
+
+		if (*(uint64_t*)(&buf[footer_detection_size - 8]) == 0x67615451CC020000
+			&& (buf[footer_detection_size - 8 - 1]) == '2')
+		{
+			for (int i = 0; i < footer_detection_size; i++) {
+				if (buf[i] == ',') {
+					return i;
+				}
+			}
+
+			fprintf(stderr, "ERROR: could not determine key end position.\n");
+			return 0;
+		}
+	}
+
+	// Detection 2, eof magic 2
+	{
+		// eof magic: C0 02 00 00
+		if (*(uint32_t*)(&buf[footer_detection_size - 4]) == 0x000002C0) {
+			return footer_detection_size - 4;
+		}
+	}
+
+	fprintf(stderr, "ERROR: unknown encryption method\n");
+	return 0;
+}
+
 int main(int argc, char** argv)
 {
 	fprintf(stderr, "QMC2 decoder (cli) v0.2 by Jixun\n\n");
@@ -52,23 +85,13 @@ int main(int argc, char** argv)
 	mgg.seekg(input_file_len - footer_detection_size, ios::beg);
 	mgg.read(reinterpret_cast<char*>(buf), footer_detection_size);
 
-	// eof magic: | 32 | 00 00 02 CC 51 54 61 67
-	if (*(uint64_t*)(&buf[footer_detection_size - 8]) != 0x67615451CC020000
-		|| (buf[footer_detection_size - 8 - 1]) != '2')
-	{
-		fprintf(stderr, "ERROR: unknown encryption method\n");
+	size_t position = detect_key_end_position(buf, footer_detection_size);
+	if (position == 0) {
+		fprintf(stderr, "ERROR: could not derive embedded ekey from file.\n");
 		return 1;
 	}
 
-	// File format:
-	// [ encrypted_data ] [ base64_encoded_ekey ] [ ',' ] [ other_metadata ]
-	size_t decrypted_file_size = 0;
-	for (int i = 0; i < footer_detection_size; i++) {
-		if (buf[i] == ',') {
-			decrypted_file_size = input_file_len - footer_detection_size + i - encrypted_key_size;
-			break;
-		}
-	}
+	size_t decrypted_file_size = input_file_len - footer_detection_size + position - encrypted_key_size;
 
 	// Extract base64_encoded_ekey
 	mgg.seekg(decrypted_file_size, ios::beg);
