@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  Explore-GitHub-Actions:
+  QMC2-WASM:
     runs-on: ubuntu-latest
     steps:
       - name: 🛎️ Checkout
