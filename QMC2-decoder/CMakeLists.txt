@@ -7,7 +7,7 @@ cmake_minimum_required (VERSION 3.8)
 add_executable (QMC2-decoder
 	"QMC2-decoder.cpp"
 	"QMC2-decoder.h"
- "../QMC2-crypto/qmc2-crypto/QMCDetection.cpp" "../QMC2-crypto/include/qmc2-crypto/QMCDetection.h")
+)
 
 include_directories($<TARGET_PROPERTY:QMC2-crypto,INTERFACE_INCLUDE_DIRECTORIES>)
 
