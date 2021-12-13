@@ -36,6 +36,12 @@ make
 注：如果解密失败，可以尝试将文件名中的非 ASCII 字符去掉后尝试。
     Linux 因为使用 UTF-8 编码因而没有该问题。
 
+## 支持的加密格式
+
+* 文件末端为 `'QTag'` 字样的 `mgg1` 文件；
+* 文件末端为 `0x?? 0x01 0x00 0x00` 的 `mflac` 与 `mgg` 文件；
+* 文件末端为 `0x?? 0x02 0x00 0x00` 的 `mgg` 文件；
+
 ## 致谢
 
 - [2021/08/26 MGG/MFLAC研究进展][research] by @ix64 & @Akarinnnnn
@@ -80,12 +86,17 @@ Note: Windows binary requires latest [VC++ x64 Runtime][vs2022_runtime].
 If decryption fails in Windows, please try again with non-ASCII
 characters in the file path. Linux uses UTF-8 encoding so is safe.
 
+## Supported format
+
+* Ending with characters `'QTag'`, with extension `mgg1`;
+* Ending with `0x?? 0x01 0x00 0x00` with extension `mflac` & `mgg`;
+* Ending with `0x?? 0x02 0x00 0x00` with extension `mgg`;
+
 ## Credits
 
 - [2021/08/26 MGG/MFLAC研究进展][research] by @ix64 & @Akarinnnnn
 - [unlock-music][unlock-music]
 - Developed with Visual Studio 2022
-
 
 [research]: https://gist.github.com/ix64/bcd72c151f21e1b050c9cc52d6ff27d5
 [unlock-music]: https://github.com/unlock-music/unlock-music
