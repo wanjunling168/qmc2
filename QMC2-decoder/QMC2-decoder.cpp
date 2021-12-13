@@ -45,29 +45,25 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	ifstream mgg(argv[1], ios::in | ios::binary);
-	if (mgg.fail()) {
+	ifstream stream_input(argv[1], ios::in | ios::binary);
+	if (stream_input.fail()) {
 		fprintf(stderr, "ERROR: could not open input file %s\n", argv[1]);
-		return 1;
-	}
-	ofstream ogg(argv[2], ios::out | ios::binary);
-	if (ogg.fail()) {
-		fprintf(stderr, "ERROR: could not open output file %s\n", argv[1]);
 		return 1;
 	}
 
 	uint8_t* buf = new uint8_t[read_buf_len]();
 
-	// ekey detection
-	mgg.seekg(0, ios::end);
-	auto input_file_len = size_t(mgg.tellg());
-	mgg.seekg(input_file_len - footer_detection_size, ios::beg);
-	mgg.read(reinterpret_cast<char*>(buf), footer_detection_size);
+	// embeded ekey detection & extraction
+	stream_input.seekg(0, ios::end);
+	auto input_file_len = size_t(stream_input.tellg());
+	stream_input.seekg(input_file_len - footer_detection_size, ios::beg);
+	stream_input.read(reinterpret_cast<char*>(buf), footer_detection_size);
 
 	qmc_detection detection;
 	if (!detect_key_end_position(detection, buf, footer_detection_size)) {
 		fprintf(stderr, "ERROR: could not derive embedded ekey from file.\n");
 		fprintf(stderr, "       %s\n", detection.error_msg);
+		stream_input.close();
 		delete[] buf;
 		return 1;
 	}
@@ -76,23 +72,32 @@ int main(int argc, char** argv)
 	size_t decrypted_file_size = input_file_len - footer_detection_size + detection.ekey_position;
 
 	// Extract base64_encoded_ekey
-	mgg.seekg(decrypted_file_size, ios::beg);
-	mgg.read(reinterpret_cast<char*>(buf), detection.ekey_len);
+	stream_input.seekg(decrypted_file_size, ios::beg);
+	stream_input.read(reinterpret_cast<char*>(buf), detection.ekey_len);
 	buf[detection.ekey_len] = 0;
 	auto stream = createInstWidthEKey(reinterpret_cast<char*>(buf));
 
-	// Begin decryption
+	ofstream stream_out(argv[2], ios::out | ios::binary);
+	if (stream_out.fail()) {
+		fprintf(stderr, "ERROR: could not open output file %s\n", argv[1]);
+		return 1;
+	}
+
 	fprintf(stderr, "decrypting... ");
-	mgg.seekg(0, ios::beg);
+
+	// Reset input position
+	stream_input.seekg(0, ios::beg);
 	uint64_t offset = 0;
 	size_t to_decrypt_len = decrypted_file_size;
+
+	// Begin decryption
 	while (to_decrypt_len > 0) {
 		auto block_size = std::min(read_buf_len, to_decrypt_len);
-		mgg.read(reinterpret_cast<char*>(buf), block_size);
-		auto bytes_read = mgg.gcount();
+		stream_input.read(reinterpret_cast<char*>(buf), block_size);
+		auto bytes_read = stream_input.gcount();
 
 		stream->StreamDecrypt(offset, buf, bytes_read);
-		ogg.write(reinterpret_cast<char*>(buf), bytes_read);
+		stream_out.write(reinterpret_cast<char*>(buf), bytes_read);
 
 		offset += bytes_read;
 		to_decrypt_len -= bytes_read;
