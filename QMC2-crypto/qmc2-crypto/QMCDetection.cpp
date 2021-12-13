@@ -38,7 +38,7 @@ bool detect_key_end_position(qmc_detection& result, uint8_t* buf, size_t len)
 			uint32_t payload_size = static_cast<uint32_t>(be32toh(eof.v2.len));
 
 			size_t iter_max = len - sizeof(eof);
-			result.ekey_position = int32_t(len) - 4 - payload_size;
+			result.ekey_position = int32_t(len) - 8 - payload_size;
 			size_t start_idx = std::max(result.ekey_position, 0);
 			for (auto i = start_idx; i < iter_max; i++) {
 				if (buf[i] == ',') {
