@@ -83,7 +83,8 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	fprintf(stderr, "decrypting... ");
+	fprintf(stderr, "decrypting...");
+	fflush(stderr);
 
 	// Reset input position
 	stream_input.seekg(0, ios::beg);
@@ -101,6 +102,8 @@ int main(int argc, char** argv)
 
 		offset += bytes_read;
 		to_decrypt_len -= bytes_read;
+		fprintf(stderr, ".");
+		fflush(stderr);
 	}
 
 	fprintf(stderr, "ok! saved to %s\n", argv[2]);
