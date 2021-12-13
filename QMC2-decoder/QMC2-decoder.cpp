@@ -6,6 +6,7 @@
 // HACK: Make VS 2022 happy
 #include "../QMC2-crypto/include/qmc2-crypto/StreamCencrypt.h"
 #include "../QMC2-crypto/include/qmc2-crypto/KeyDec.h"
+#include "../QMC2-crypto/include/qmc2-crypto/QMCDetection.h"
 
 #include <cstring>
 
@@ -13,12 +14,15 @@
 #include <fstream>
 #include <string>
 
-constexpr size_t read_buf_len = 4096;
-constexpr size_t footer_detection_size = 0x40;
-constexpr size_t encrypted_key_size = 704;
+// 1M buffer
+constexpr size_t read_buf_len = 1 * 1024 * 1024;
 
-static_assert(read_buf_len > footer_detection_size && read_buf_len > encrypted_key_size,
-	"'read_buf_len' should be larger than 'footer_detection_size' and 'encrypted_key_size'.");
+static_assert(
+	read_buf_len > footer_detection_size
+	&& read_buf_len > encrypted_key_size_v1
+	&& read_buf_len > encrypted_key_size_v2,
+	"'read_buf_len' should be larger than 'footer_detection_size' and 'encrypted_key_size'."
+);
 
 using namespace std;
 
@@ -29,39 +33,6 @@ StreamCencrypt* createInstWidthEKey(const char* ekey_b64) {
 	stream->SetKeyDec(key_dec);
 	delete key_dec;
 	return stream;
-}
-
-size_t detect_key_end_position(uint8_t* buf, size_t size) {
-	// Detection 1, eof magic 1
-	{
-		// eof magic: | 32 | 00 00 02 CC 51 54 61 67
-		// File format:
-		// [ encrypted_data ] [ base64_encoded_ekey ] [ ',' ] [ other_metadata ]
-
-		if (*(uint64_t*)(&buf[size - 8]) == 0x67615451CC020000
-			&& (buf[size - 8 - 1]) == '2')
-		{
-			for (int i = 0; i < footer_detection_size; i++) {
-				if (buf[i] == ',') {
-					return i;
-				}
-			}
-
-			fprintf(stderr, "ERROR: could not determine key end position.\n");
-			return 0;
-		}
-	}
-
-	// Detection 2, eof magic 2
-	{
-		// eof magic: C0 02 00 00
-		if (*(uint32_t*)(&buf[size - 4]) == 0x000002C0) {
-			return size - 4;
-		}
-	}
-
-	fprintf(stderr, "ERROR: unknown encryption method\n");
-	return 0;
 }
 
 int main(int argc, char** argv)
@@ -77,7 +48,7 @@ int main(int argc, char** argv)
 	ifstream mgg(argv[1], ios::in | ios::binary);
 	ofstream ogg(argv[2], ios::out | ios::binary);
 
-	uint8_t buf[read_buf_len] = {};
+	uint8_t* buf = new uint8_t[read_buf_len]();
 
 	// ekey detection
 	mgg.seekg(0, ios::end);
@@ -85,21 +56,25 @@ int main(int argc, char** argv)
 	mgg.seekg(input_file_len - footer_detection_size, ios::beg);
 	mgg.read(reinterpret_cast<char*>(buf), footer_detection_size);
 
-	size_t position = detect_key_end_position(buf, footer_detection_size);
-	if (position == 0) {
+	qmc_detection detection;
+	if (!detect_key_end_position(detection, buf, footer_detection_size)) {
 		fprintf(stderr, "ERROR: could not derive embedded ekey from file.\n");
+		fprintf(stderr, "       %s\n", detection.error_msg);
+		delete[] buf;
 		return 1;
 	}
 
-	size_t decrypted_file_size = input_file_len - footer_detection_size + position - encrypted_key_size;
+	// size_t decrypted_file_size = input_file_len - footer_detection_size + position - encrypted_key_size;
+	size_t decrypted_file_size = input_file_len - footer_detection_size + detection.ekey_position;
 
 	// Extract base64_encoded_ekey
 	mgg.seekg(decrypted_file_size, ios::beg);
-	mgg.read(reinterpret_cast<char*>(buf), encrypted_key_size);
-	buf[encrypted_key_size] = 0;
+	mgg.read(reinterpret_cast<char*>(buf), detection.ekey_len);
+	buf[detection.ekey_len] = 0;
 	auto stream = createInstWidthEKey(reinterpret_cast<char*>(buf));
 
 	// Begin decryption
+	fprintf(stderr, "decrypting... ");
 	mgg.seekg(0, ios::beg);
 	uint64_t offset = 0;
 	size_t to_decrypt_len = decrypted_file_size;
@@ -115,7 +90,8 @@ int main(int argc, char** argv)
 		to_decrypt_len -= bytes_read;
 	}
 
-	cout << "ok" << endl;
+	fprintf(stderr, "ok! saved to %s\n", argv[2]);
 
+	delete[] buf;
 	return 0;
 }

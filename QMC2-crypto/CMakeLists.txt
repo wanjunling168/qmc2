@@ -17,15 +17,21 @@ set(SOURCE_TEA
 	"vendor/TarsCpp/util/src/tc_tea.cpp"
 )
 
-# Add source to this project's executable.
-add_library (QMC2-crypto
-	${SOURCE_TEA}
+set(QMC_CRYPTO_HEADERS
+	"include/qmc2-crypto/__endian_helper.h"
 	"include/qmc2-crypto/IKeyDec.h"
 	"include/qmc2-crypto/StreamCencrypt.h"
 	"include/qmc2-crypto/IStreamEncryptAndDecrypt.h"
 	"include/qmc2-crypto/KeyDec.h"
+)
+
+# Add source to this project's executable.
+add_library (QMC2-crypto
+	${SOURCE_TEA}
+	${QMC_CRYPTO_HEADERS}
+	"qmc2-crypto/KeyDec.cpp"
 	"qmc2-crypto/StreamCencrypt.cpp"
-	"qmc2-crypto/KeyDec.cpp")
+)
 
 if (!MSVC)
 	target_link_libraries(QMC2-crypto m)
