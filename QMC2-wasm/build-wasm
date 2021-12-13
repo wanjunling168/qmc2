@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+pushd "$(realpath "$(dirname "$0")")"
+
+mkdir -p build/wasm
+
+if [ ! -d build/emsdk ]; then
+	git clone https://github.com/emscripten-core/emsdk.git build/emsdk
+fi
+
+pushd build/emsdk
+git pull
+./emsdk install latest
+./emsdk activate latest
+source ./emsdk_env.sh
+popd # build/emsdk
+
+pushd build/wasm
+emcmake cmake -DCMAKE_BUILD_TYPE=Release ../../..
+make -j
+cp QMC2-wasm/QMC2-wasm.{js,wasm} ../../../public/
+popd # build/wasm
+
+popd
