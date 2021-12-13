@@ -46,7 +46,15 @@ int main(int argc, char** argv)
 	}
 
 	ifstream mgg(argv[1], ios::in | ios::binary);
+	if (mgg.fail()) {
+		fprintf(stderr, "ERROR: could not open input file %s\n", argv[1]);
+		return 1;
+	}
 	ofstream ogg(argv[2], ios::out | ios::binary);
+	if (ogg.fail()) {
+		fprintf(stderr, "ERROR: could not open output file %s\n", argv[1]);
+		return 1;
+	}
 
 	uint8_t* buf = new uint8_t[read_buf_len]();
 
