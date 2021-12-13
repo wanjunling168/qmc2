@@ -7,4 +7,9 @@ project ("QMC2")
 
 # Include sub-projects.
 add_subdirectory ("QMC2-crypto")
-add_subdirectory ("QMC2-decoder")
+
+if (EMSCRIPTEN)
+	add_subdirectory ("QMC2-wasm")
+else()
+	add_subdirectory ("QMC2-decoder")
+endif()
