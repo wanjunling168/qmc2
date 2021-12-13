@@ -1,0 +1,27 @@
+name: WASM Build + Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v2.3.1
+
+      - name: 📦 Install dependencies
+        run: |
+          sudo apt-get install -y cmake build-essential
+
+      - name: 🔧 Produce WASM build
+        run: |
+          bash QMC2-wasm/build-wasm
+
+      - name: 🚀 Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.7
+        with:
+          branch: gh-pages
+          folder: public
