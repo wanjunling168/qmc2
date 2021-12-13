@@ -2,6 +2,7 @@
 #include "qmc2-crypto/__endian_helper.h"
 #include "qmc2-crypto/QMCDetection.h"
 
+#include <cstdio>
 #include <cstdint>
 #include <cstring>
 #include <algorithm>
@@ -17,7 +18,7 @@ union eof_magic
 {
 	PACK(struct {
 		uint32_t _unused;
-		uint32_t len; // BigEndian
+		uint32_t len; // LittleEndian
 	}) v1;
 
 	PACK(struct {
@@ -31,6 +32,10 @@ const char* MAGIC_QTAG = "QTag";
 bool detect_key_end_position(qmc_detection& result, uint8_t* buf, size_t len)
 {
 	memset(&result, 0x00, sizeof(result));
+	if (len < sizeof(eof_magic)) {
+		strncpy(result.error_msg, "buffer too small", sizeof(result.error_msg));
+		return false;
+	}
 
 	eof_magic eof = *reinterpret_cast<eof_magic*>(&buf[len - sizeof(eof_magic)]);
 	{
@@ -54,8 +59,7 @@ bool detect_key_end_position(qmc_detection& result, uint8_t* buf, size_t len)
 	}
 
 	{
-		// nl: big-endian
-		// big-endian to host-endian
+		// little-endian to host-endian
 		uint32_t key_len = static_cast<uint32_t>(le32toh(eof.v1.len));
 
 		// v1 doesn't use RC4, as it will require len(key) >= 512 & ver2
@@ -70,7 +74,7 @@ bool detect_key_end_position(qmc_detection& result, uint8_t* buf, size_t len)
 		strncpy(result.error_msg, "last 4 bytes are ZERO", sizeof(result.error_msg));
 	}
 	else {
-		strncpy(result.error_msg, "unknown encryption", sizeof(result.error_msg));
+		sprintf(result.error_msg, "unknown magic: %08x-%08x", eof.v2.magic, eof.v2.len);
 	}
 
 	return false;
