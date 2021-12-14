@@ -6,11 +6,14 @@
  * @description Internal endian helper header
  */
 
+#ifndef NOMINMAX
+#define NOMINMAX 1
+#endif
+
 #if __has_include(<endian.h>)
 #include <arpa/inet.h>
 #include <endian.h>
 #else
-#define NOMINMAX
 #include <winsock.h>
 #undef NOMINMAX
 
