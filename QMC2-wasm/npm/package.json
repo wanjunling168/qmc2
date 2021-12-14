@@ -11,6 +11,7 @@
   "keywords": [
     "QMC"
   ],
+  "repository": "github:jixunmoe/qmc2",
   "author": "Jixun Wu",
   "license": "MIT"
 }
