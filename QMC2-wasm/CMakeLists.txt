@@ -10,11 +10,28 @@ add_executable (QMC2-wasm
 	QMC2-wasm.cpp
 )
 
-include_directories($<TARGET_PROPERTY:QMC2-crypto,INTERFACE_INCLUDE_DIRECTORIES>)
+include_directories(
+	$<TARGET_PROPERTY:QMC2-crypto,INTERFACE_INCLUDE_DIRECTORIES>
+)
 
 target_link_libraries(QMC2-wasm QMC2-crypto)
 
-set_target_properties(QMC2-wasm PROPERTIES LINK_FLAGS 
-	"--bind -s MODULARIZE=1 -s EXPORT_NAME=QMCCryptoModule -s EXPORTED_RUNTIME_METHODS=getValue,allocate,allocateUTF8,writeArrayToMemory,UTF8ToString,stringToUTF8")
+set(RUNTIME_METHODS_LIST
+	getValue
+	writeArrayToMemory
+	UTF8ToString
+)
+list(JOIN RUNTIME_METHODS_LIST "," RUNTIME_METHODS)
 
-# TODO: Add tests and install targets if needed.
+set(EMSCRIPTEN_FLAG_LIST
+	"--bind"
+	"-s MODULARIZE=1"
+	"-s EXPORT_NAME=QMCCryptoModule"
+	"-s EXPORTED_RUNTIME_METHODS=${RUNTIME_METHODS}"
+)
+list(JOIN EMSCRIPTEN_FLAG_LIST " " EMSCRIPTEN_FLAGS)
+
+set_target_properties(
+	QMC2-wasm
+	PROPERTIES LINK_FLAGS "${EMSCRIPTEN_FLAGS}"
+)
