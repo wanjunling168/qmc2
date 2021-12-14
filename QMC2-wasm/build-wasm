@@ -20,7 +20,7 @@ popd # build/emsdk
 pushd build/wasm
 emcmake cmake -DCMAKE_BUILD_TYPE=Release ../../..
 make -j
-cp QMC2-wasm/QMC2-wasm.{js,wasm} ../../../public/
+cp QMC2-wasm/QMC2{-legacy.js,-wasm.js,-wasm.wasm} ../../../public/
 popd # build/wasm
 
 popd
