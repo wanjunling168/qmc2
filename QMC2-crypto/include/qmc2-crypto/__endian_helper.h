@@ -11,7 +11,6 @@
 #endif
 
 #if __has_include(<endian.h>)
-#include <arpa/inet.h>
 #include <endian.h>
 #else
 #include <winsock.h>
