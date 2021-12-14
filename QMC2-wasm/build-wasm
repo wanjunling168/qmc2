@@ -12,8 +12,8 @@ fi
 
 pushd build/emsdk
 git pull
-./emsdk install latest
-./emsdk activate latest
+./emsdk install 3.0.0
+./emsdk activate 3.0.0
 source ./emsdk_env.sh
 popd # build/emsdk
 
