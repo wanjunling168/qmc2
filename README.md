@@ -44,6 +44,18 @@ Linux 因为使用 UTF-8 编码因而没有该问题。
 - 文件末端为 `0x?? 0x01 0x00 0x00` 的 `mflac` 与 `mgg` 文件；
 - 文件末端为 `0x?? 0x02 0x00 0x00` 的 `mgg` 文件；
 
+## Node 包
+
+安装：
+
+```sh
+npm i @jixun/qmc2-crypto
+```
+
+引入后使用即可，默认使用的是不依赖 `wasm` 的版本。
+
+详细请参见[包的说明][npm_readme]以及[使用文档/用例][npm_usage]。
+
 ## 致谢
 
 - [2021/08/26 MGG/MFLAC 研究进展][research] by @ix64 & @Akarinnnnn
@@ -97,6 +109,18 @@ characters in the file path. Linux uses UTF-8 encoding so is safe.
 - Ending with `0x?? 0x01 0x00 0x00` with extension `mflac` & `mgg`;
 - Ending with `0x?? 0x02 0x00 0x00` with extension `mgg`;
 
+## Node Package
+
+Install:
+
+```sh
+npm i @jixun/qmc2-crypto
+```
+
+It uses the `legacy` build by default that does not require `WASM`.
+
+See [package readme][npm_readme] and [usage document][npm_usage] for details.
+
 ## Credits
 
 - [2021/08/26 MGG/MFLAC 研究进展][research] by @ix64 & @Akarinnnnn
@@ -108,3 +132,5 @@ characters in the file path. Linux uses UTF-8 encoding so is safe.
 [unlock-music]: https://github.com/unlock-music/unlock-music
 [latest_release]: https://github.com/jixunmoe/qmc2/releases/latest
 [vs2022_runtime]: https://aka.ms/vs/17/release/vc_redist.x64.exe
+[npm_readme]: https://github.com/jixunmoe/qmc2/tree/main/QMC2-wasm/npm
+[npm_usage]: https://jixunmoe.github.io/qmc2/source.html
