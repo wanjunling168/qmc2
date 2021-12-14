@@ -64,7 +64,7 @@ async function decryptMGG(mggBlob, name) {
       await new Promise((resolve) => setTimeout(resolve));
     }
     QMCCrypto._free(buf);
-    // TODO: free hCrypto
+    hCrypto.delete();
 
     const isOGG = /\.mgg\d?$/.test(name);
     const isFLAC = /\.mflac\d?$/.test(name);
