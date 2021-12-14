@@ -133,6 +133,20 @@ function processFile(file) {
 }
 
 function main() {
+  setInProgress(true);
+  const backend = window.WebAssembly ? 'wasm' : 'legacy';
+
+  const qmc2Script = document.createElement('script');
+  qmc2Script.src = `./QMC2-${backend}.js`;
+  qmc2Script.onload = () => {
+    document.getElementById('qmc2-backend').textContent = backend;
+    setInProgress(false);
+  };
+  qmc2Script.onerror = () => {
+    alert('加载 QMC2-Crypto 模组失败。');
+  };
+  document.head.appendChild(qmc2Script);
+
   $input.onchange = () => {
     processFile($input.files[0]);
   };
