@@ -1,0 +1,11 @@
+{
+  "name": "@jixun/qmc2-crypto",
+  "version": "0.0.5",
+  "description": "QMC2 Crypto (transpiled)",
+  "main": "build/QMC2-legacy.js",
+  "keywords": [
+    "QMC"
+  ],
+  "author": "Jixun Wu",
+  "license": "MIT"
+}

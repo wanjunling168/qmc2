@@ -4,7 +4,9 @@ set -e
 
 pushd "$(realpath "$(dirname "$0")")"
 
-mkdir -p build/wasm
+CURR_DIR="${PWD}"
+
+mkdir -p build/wasm npm/build/
 
 if [ ! -d build/emsdk ]; then
 	git clone https://github.com/emscripten-core/emsdk.git build/emsdk
@@ -20,7 +22,8 @@ popd # build/emsdk
 pushd build/wasm
 emcmake cmake -DCMAKE_BUILD_TYPE=Release ../../..
 make -j
-cp QMC2-wasm/QMC2{-legacy.js,-wasm.js,-wasm.wasm} ../../../public/
+cp QMC2-wasm/QMC2{-legacy.js,-wasm.js,-wasm.wasm} "${CURR_DIR}/../public/"
+cp QMC2-wasm/QMC2{-legacy.js,-wasm.js,-wasm.wasm} "${CURR_DIR}/npm/build/"
 popd # build/wasm
 
 popd
