@@ -6,9 +6,7 @@
 #include <emscripten/bind.h>
 #include <string>
 
-#include "../QMC2-crypto/include/qmc2-crypto/KeyDec.h"
-#include "../QMC2-crypto/include/qmc2-crypto/QMCDetection.h"
-#include "../QMC2-crypto/include/qmc2-crypto/StreamCencrypt.h"
+#include <qmc2-crypto/StreamCencrypt.h>
 
 namespace em = emscripten;
 

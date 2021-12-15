@@ -3,10 +3,9 @@
 
 #include "QMC2-decoder.h"
 
-// HACK: Make VS 2022 happy
-#include "../QMC2-crypto/include/qmc2-crypto/KeyDec.h"
-#include "../QMC2-crypto/include/qmc2-crypto/QMCDetection.h"
-#include "../QMC2-crypto/include/qmc2-crypto/StreamCencrypt.h"
+#include <qmc2-crypto/IKeyDec.h>
+#include <qmc2-crypto/QMCDetection.h>
+#include <qmc2-crypto/StreamCencrypt.h>
 
 #include <cstring>
 
