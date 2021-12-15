@@ -5,12 +5,48 @@ This file is part of [qmc2][qmc2] project, licensed under the
 
 For usage, please see the [demo source][demo_src].
 
+## Legacy
+
+Default export is the legacy build (pure JS), which does not require WASM.
+
+```js
+const QMCCryptoModule = require('@jixun/qmc2-crypto'); // js
+import QMCCryptoModule from '@jixun/qmc2-crypto'; // ts with typing
+
+// or:
+
+const QMCCryptoModule = require('@jixun/qmc2-crypto/QMC2-legacy'); // js
+import QMCCryptoModule from '@jixun/qmc2-crypto/QMC2-legacy'; // ts with typing
+```
+
 ## WASM
 
-For wasm implementation, please include/reference the following file:
+WwbAssembly version. Uses external web assembly file.
 
-- `@jixun/qmc2-crypto/QMC2-wasm.js`
-- `@jixun/qmc2-crypto/QMC2-wasm.wasm`
+You'll need to place the file `node_modules/@jixun/qmc2-crypto/QMC2-wasm.wasm`
+to the same directory of your `app.js`.
+
+```js
+const QMCCryptoModule = require('@jixun/qmc2-crypto/QMC2-wasm'); // js
+import QMCCryptoModule from '@jixun/qmc2-crypto/QMC2-wasm'; // ts with typing
+
+QMCCryptoModule().then(QMCCrypto => {
+	// Your code here.
+});
+```
+
+## WASM-Bundle
+
+Similar to WASM, but with WASM binary embedded to the JavaScript file.
+
+```js
+const QMCCryptoModule = require('@jixun/qmc2-crypto/QMC2-wasm-bundle'); // cjs
+import QMCCryptoModule from '@jixun/qmc2-crypto/QMC2-wasm-bundle'; // ts
+
+QMCCryptoModule().then(QMCCrypto => {
+	// Your code here.
+});
+```
 
 [qmc2]: https://github.com/jixunmoe/qmc2/
 [license]: https://github.com/jixunmoe/qmc2/blob/main/LICENSE

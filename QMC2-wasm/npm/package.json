@@ -8,7 +8,8 @@
     "*.d.ts",
     "QMC2-legacy.js",
     "QMC2-wasm.js",
-    "QMC2-wasm.wasm"
+    "QMC2-wasm.wasm",
+    "QMC2-wasm-bundle.js"
   ],
   "keywords": [
     "QMC"
