@@ -5,6 +5,8 @@ This file is part of [qmc2][qmc2] project, licensed under the
 
 For usage, please see the [demo source][demo_src].
 
+For documentation, check out the exported [TypeScript documentation][ts_doc].
+
 ## Legacy
 
 Default export is the legacy build (pure JS), which does not require WASM.
@@ -49,5 +51,6 @@ QMCCryptoModule().then(QMCCrypto => {
 ```
 
 [qmc2]: https://github.com/jixunmoe/qmc2/
+[ts_doc]: https://jixunmoe.github.io/qmc2/docs/
 [license]: https://github.com/jixunmoe/qmc2/blob/main/LICENSE
 [demo_src]: https://jixunmoe.github.io/qmc2/source.html
