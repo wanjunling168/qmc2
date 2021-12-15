@@ -9,6 +9,10 @@ export declare interface StreamCencrypt {
 }
 
 export declare interface WASMExportedRuntime {
+  /**
+   * Emscripten HEAP, use this for raw memory access.
+   * @type {Uint8Array}
+   */
   HEAPU8: Uint8Array;
 
   /**
@@ -66,6 +70,7 @@ export declare interface QMCCrypto extends WASMExportedRuntime {
    * @param detectBuf WASM ptr points to the beginning of the detection buffer.
    * @param size size of detection buffer.
    * @example
+   * ```js
    * // Allocate memory for detection buffer in Emscripten HEAP.
    * const detectionBuf = new Uint8Array(inputArrayBuffer.slice(-40));
    * const pDetectionBuf = QMCCrypto._malloc(detectionBuf.length);
@@ -90,6 +95,7 @@ export declare interface QMCCrypto extends WASMExportedRuntime {
    * } else {
    *   // continue with ekey data...
    * }
+   * ```
    */
   detectKeyEndPosition(
     result: WASM_ptr,
@@ -115,6 +121,7 @@ export declare interface QMCCrypto extends WASMExportedRuntime {
    *               This parameter is _required_ to derive correct key.
    * @param size   Size of the provided buffer.
    * @example
+   * ```js
    * // Decrypt a block of the file
    *
    * // Setup:
@@ -131,6 +138,7 @@ export declare interface QMCCrypto extends WASMExportedRuntime {
    *
    * // Retrive decrypted data:
    * const decryptedBlock = QMCCrypto.HEAPU8.slice(buf, buf + blockSize);
+   * ```
    */
   decryptStream(
     encryptor: StreamCencrypt,
