@@ -3,6 +3,10 @@
 
 #include "QMC2-wasm.h"
 
+#include <qmc2-crypto/KeyDec.h>
+#include <qmc2-crypto/QMCDetection.h>
+#include <qmc2-crypto/StreamCencrypt.h>
+
 StreamCencrypt *createInstWidthEKey(std::string ekey_b64)
 {
   StreamCencrypt *stream = new StreamCencrypt();
