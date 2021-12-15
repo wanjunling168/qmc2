@@ -11,10 +11,17 @@
     "QMC2-wasm.wasm",
     "QMC2-wasm-bundle.js"
   ],
+  "scripts": {
+    "build:doc": "typedoc --out docs QMCCrypto.d.ts"
+  },
   "keywords": [
     "QMC"
   ],
   "repository": "github:jixunmoe/qmc2",
   "author": "Jixun Wu",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "typedoc": "^0.22.10",
+    "typescript": "^4.5.4"
+  }
 }

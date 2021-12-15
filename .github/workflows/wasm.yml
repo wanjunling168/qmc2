@@ -19,6 +19,14 @@ jobs:
         run: |
           bash QMC2-wasm/build-wasm
 
+      - name: 🔧 Produce QMC2-Crypto docs
+        run: |
+          PUBLIC_DIR="$PWD/public/"
+          cd QMC2-wasm/npm
+          npm ci
+          npm run build:doc
+          cp -R docs "$PUBLIC_DIR"
+
       - name: 🚀 Deploy
         if: github.ref == 'refs/heads/main'
         uses: JamesIves/github-pages-deploy-action@4.1.7
