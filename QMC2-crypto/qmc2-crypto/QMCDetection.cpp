@@ -30,6 +30,19 @@ union eof_magic {
 
 const char *MAGIC_QTAG = "QTag";
 
+size_t find_comma(uint8_t *buf, size_t start, size_t end)
+{
+  for (auto i = start; i < end; i++)
+  {
+    if (buf[i] == ',')
+    {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
 bool detect_key_end_position(qmc_detection &result, uint8_t *buf, size_t len)
 {
   memset(&result, 0x00, sizeof(result));
@@ -45,20 +58,35 @@ bool detect_key_end_position(qmc_detection &result, uint8_t *buf, size_t len)
     {
       uint32_t payload_size = static_cast<uint32_t>(be32toh(eof.v2.len));
 
-      size_t iter_max = len - sizeof(eof);
       result.ekey_position = int32_t(len) - 8 - payload_size;
       size_t start_idx = std::max(result.ekey_position, 0);
-      for (auto i = start_idx; i < iter_max; i++)
+      size_t iter_max = len - sizeof(eof);
+
+      auto key_end_loc = find_comma(buf, start_idx, iter_max);
+      if (key_end_loc < 0)
       {
-        if (buf[i] == ',')
+        strncpy(result.error_msg, "could not find end of ekey", sizeof(result.error_msg));
+        return false;
+      }
+
+      result.ekey_len = key_end_loc - result.ekey_position;
+
+      auto song_id_start_loc = key_end_loc + 1;
+      auto song_id_end_loc = find_comma(buf, song_id_start_loc, iter_max);
+      if (song_id_end_loc > 0)
+      {
+        size_t real_song_id_size = song_id_end_loc - song_id_start_loc;
+        if (real_song_id_size <= sizeof(result.song_id) - 1)
         {
-          result.ekey_len = i - result.ekey_position;
-          return true;
+          memcpy(result.song_id, &buf[song_id_start_loc], real_song_id_size);
+        }
+        else
+        {
+          memcpy(result.song_id, "(overflow)", 10);
         }
       }
 
-      strncpy(result.error_msg, "could not find end of ekey", sizeof(result.error_msg));
-      return false;
+      return true;
     }
     // not v2
   }

@@ -1,4 +1,4 @@
-﻿// QMC2-decoder.cpp : Defines the entry point for the application.
+// QMC2-decoder.cpp : Defines the entry point for the application.
 //
 
 #include "QMC2-decoder.h"
@@ -67,6 +67,8 @@ int main(int argc, char **argv)
     delete[] buf;
     return 1;
   }
+
+  fprintf(stderr, "song_id: %s\n", detection.song_id[0] ? detection.song_id : "(unknown)");
 
   // size_t decrypted_file_size = input_file_len - footer_detection_size +
   // position - encrypted_key_size;

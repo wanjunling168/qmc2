@@ -17,6 +17,10 @@ struct qmc_detection
 
   size_t ekey_len;
 
+  // decimal representation of UINT64_MAX is 21 digits
+  // Use 24 here to align to memory.
+  char song_id[24];
+
   char error_msg[40];
 };
 
