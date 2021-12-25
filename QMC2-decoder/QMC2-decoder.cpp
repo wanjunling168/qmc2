@@ -35,7 +35,7 @@ StreamCencrypt *createInstWidthEKey(const char *ekey_b64)
 
 int main(int argc, char **argv)
 {
-  fprintf(stderr, "QMC2 decoder (cli) v0.0.5 by Jixun\n\n");
+  fprintf(stderr, "QMC2 decoder (cli) v0.0.6 by Jixun\n\n");
 
   if (argc < 3)
   {
