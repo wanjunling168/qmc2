@@ -1,6 +1,6 @@
 {
   "name": "@jixun/qmc2-crypto",
-  "version": "0.0.5-R4",
+  "version": "0.0.6-R1",
   "description": "QMC2 Crypto (transpiled)",
   "main": "QMC2-legacy.js",
   "types": "./QMC2-legacy.d.ts",
