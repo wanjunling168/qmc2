@@ -1,4 +1,4 @@
-// QMC2-decoder.cpp : Defines the entry point for the application.
+﻿// QMC2-decoder.cpp : Defines the entry point for the application.
 //
 
 #include "QMC2-decoder.h"
@@ -83,7 +83,7 @@ int main(int argc, char **argv)
   ofstream stream_out(argv[2], ios::out | ios::binary);
   if (stream_out.fail())
   {
-    fprintf(stderr, "ERROR: could not open output file %s\n", argv[1]);
+    fprintf(stderr, "ERROR: could not open output file %s\n", argv[2]);
     return 1;
   }
 
