@@ -7,6 +7,8 @@
 #include <qmc2-crypto/QMCDetection.h>
 #include <qmc2-crypto/StreamCencrypt.h>
 
+#include <stddef.h>
+
 StreamCencrypt *createInstWidthEKey(std::string ekey_b64)
 {
   StreamCencrypt *stream = new StreamCencrypt();
@@ -20,6 +22,26 @@ StreamCencrypt *createInstWidthEKey(std::string ekey_b64)
 size_t sizeof_qmc_detection()
 {
   return sizeof(qmc_detection);
+}
+
+size_t offsetof_song_id()
+{
+  return offsetof(qmc_detection, song_id);
+}
+
+size_t offsetof_error_msg()
+{
+  return offsetof(qmc_detection, error_msg);
+}
+
+size_t sizeof_song_id()
+{
+  return sizeof(qmc_detection::song_id);
+}
+
+size_t sizeof_error_msg()
+{
+  return sizeof(qmc_detection::error_msg);
 }
 
 bool detectKeyEndPosition(uintptr_t result, uintptr_t buf, size_t len)

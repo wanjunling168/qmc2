@@ -62,6 +62,10 @@ export declare interface QMCCrypto extends WASMExportedRuntime {
    * Get the size of qmc_detection struct.
    */
   sizeof_qmc_detection(): number;
+  offsetof_song_id(): number;
+  offsetof_error_msg(): number;
+  sizeof_song_id(): number;
+  sizeof_error_msg(): number;
 
   /**
    * Detect embedded ekey position using the end-of-file buffer.
