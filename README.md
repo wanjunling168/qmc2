@@ -40,7 +40,7 @@ Linux 因为使用 UTF-8 编码因而没有该问题。
 
 ## 支持的加密格式
 
-- 文件末端为 `'QTag'` 字样的 `mgg1` 文件；
+- 文件末端为 `'QTag'` 字样的 `mgg1` / `mflac0` 文件；或许也支持其它的该结尾的文件。
 - 文件末端为 `0x?? 0x01 0x00 0x00` 的 `mflac` 与 `mgg` 文件；
 - 文件末端为 `0x?? 0x02 0x00 0x00` 的 `mgg` 文件；
 
@@ -105,7 +105,8 @@ characters in the file path. Linux uses UTF-8 encoding so is safe.
 
 ## Supported format
 
-- Ending with characters `'QTag'`, with extension `mgg1`;
+- Ending with characters `'QTag'`, with extension `mgg1` / `mflac0`;  
+  might also work for other extensions with this ending.
 - Ending with `0x?? 0x01 0x00 0x00` with extension `mflac` & `mgg`;
 - Ending with `0x?? 0x02 0x00 0x00` with extension `mgg`;
 
