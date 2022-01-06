@@ -10,7 +10,12 @@
 #define NOMINMAX 1
 #endif
 
-#if __has_include(<endian.h>)
+#if defined(__APPLE__)
+#include <libkern/OSByteOrder.h>
+
+#define le32toh(x) OSSwapLittleToHostInt32 (x)
+#define be32toh(x) OSSwapBigToHostInt32 (x)
+#elif __has_include(<endian.h>)
 #include <endian.h>
 #else
 #include <winsock.h>
