@@ -95,7 +95,7 @@ bool detect_key_end_position(qmc_detection &result, uint8_t *buf, size_t len)
     // little-endian to host-endian
     uint32_t key_len = static_cast<uint32_t>(le32toh(eof.v1.len));
 
-    // Currently known largest key size is 0x02C0 (704)
+    // Currently known largest key size is 0x03f1 (1009)
     if (key_len < 0x400)
     {
       result.ekey_position = int32_t(len) - sizeof(eof.v1.len) - key_len;
