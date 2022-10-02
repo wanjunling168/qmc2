@@ -111,7 +111,6 @@ bool KeyDec::isEncV2(std::vector<uint8_t> &key)
   return memcmp(key.data(), "QQMusic EncV2,Key:", 18) == 0;
 }
 
-// BYTE* RawData,DWORD RawSize,BYTE* MixKey,BYTE* Buffer,DWORD* OutputSize
 bool KeyDec::DecryptV2Key(std::vector<uint8_t> &key)
 {
   char MixKey1[] = CONST_MIX_KEY_1;
