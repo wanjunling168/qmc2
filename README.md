@@ -61,7 +61,7 @@ npm i @jixun/qmc2-crypto
 - [2021/08/26 MGG/MFLAC 研究进展][research] by @ix64 & @Akarinnnnn
 - [unlock-music][unlock-music]: Unlock Music 项目
 - [zeroclear/unlock-mflac-20220931][zeroclear_unlock_mflac]: @zeroclear 提供的解密逆向
-- 使用 Visual Studio 2022 进行开发
+- 使用 Visual Studio 2022 以及 VSCode 进行开发
 
 ---
 
@@ -128,7 +128,7 @@ See [package readme][npm_readme] and [usage document][npm_usage] for details.
 - [2021/08/26 MGG/MFLAC 研究进展][research] by @ix64 & @Akarinnnnn
 - [unlock-music][unlock-music]: Unlock Music project
 - [zeroclear/unlock-mflac-20220931][zeroclear_unlock_mflac]: RE of new EncV2 key by @zeroclear
-- Developed with Visual Studio 2022 / Visual Studio Code + C++ Extensions
+- Developed with Visual Studio 2022 & VSCode
 
 [research]: https://gist.github.com/ix64/bcd72c151f21e1b050c9cc52d6ff27d5
 [qmc2_wasm]: https://jixunmoe.github.io/qmc2/
