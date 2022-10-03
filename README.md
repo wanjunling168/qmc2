@@ -38,6 +38,10 @@ Linux x86_64、Win (32 位) 及 Win (64 位) 的二进制文件下载。
 注：如果解密失败，可以尝试将文件名中的非 ASCII 字符去掉后尝试。
 Linux 因为使用 UTF-8 编码因而没有该问题。
 
+### 批量替换
+
+参考 Wiki 文章[批量转换][wiki_batch_convert]来获取利用 bash 进行批量转换的调用范例。
+
 ## 支持的加密格式
 
 - 文件末端为 `'QTag'` 字样的 `mgg1` / `mflac0` 文件；或许也支持其它的该结尾的文件。
@@ -104,6 +108,10 @@ Note: Windows binary requires latest [VC++ x64 Runtime][vs2022_runtime].
 If decryption fails in Windows, please try again with non-ASCII
 characters in the file path. Linux uses UTF-8 encoding so is safe.
 
+### Decode in batch
+
+Please refer to wiki [批量转换 (Chinese only)][wiki_batch_convert] for bash script instructions & examples.
+
 ## Supported format
 
 - Ending with characters `'QTag'`, with extension `mgg1` / `mflac0`;  
@@ -138,3 +146,4 @@ See [package readme][npm_readme] and [usage document][npm_usage] for details.
 [npm_readme]: https://github.com/jixunmoe/qmc2/tree/main/QMC2-wasm/npm
 [npm_usage]: https://jixunmoe.github.io/qmc2/source.html
 [zeroclear_unlock_mflac]: https://github.com/zeroclear/unlock-mflac-20220931
+[wiki_batch_convert]: https://github.com/jixunmoe/qmc2/wiki/批量转换
