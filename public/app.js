@@ -6,13 +6,20 @@ const DECRYPTION_BUF_SIZE = 2 * 1024 * 1024;
 
 let lastURL = "";
 
+const $app = document.getElementById("app");
 const $prog = document.getElementById("prog");
 const $input = document.getElementById("input");
 const $dl = document.getElementById("download");
 const $player = document.getElementById("player");
+const $btnStart = document.getElementById("btn_start");
+
+function getInProgress() {
+  return $app.getAttribute('data-decoded') === 'false';
+}
 
 function setInProgress(inProgress) {
-  $input.disabled = $player.disabled = inProgress;
+  $app.setAttribute('data-decoded', !inProgress);
+  $btnStart.disabled = $input.disabled = $player.disabled = inProgress;
   if (inProgress) {
     $player.pause();
   }
@@ -146,8 +153,7 @@ async function decryptMGG(mggBlob) {
 
     return decryptedParts;
   } else {
-    alert("ERROR: could not decrypt\n       " + detectionError);
-    return null;
+    throw new Error(detectionError);
   }
 }
 
@@ -156,7 +162,10 @@ async function decryptMGG(mggBlob) {
  * @param  {File} 通过拖放或文件输入获得的文件。
  */
 function processFile(file) {
+  $prog.value = 0;
+  $app.setAttribute('data-file-loaded', true);
   setInProgress(true);
+
   const fileName = file.name;
   const reader = new FileReader();
   reader.addEventListener("abort", () => {
@@ -191,6 +200,7 @@ function processFile(file) {
         $dl.download = newFileName;
       })
       .catch((err) => {
+        $app.setAttribute('data-file-loaded', false);
         console.error(err);
         alert("解密失败: \n" + err.message);
       })
@@ -224,7 +234,7 @@ function main() {
     processFile($input.files[0]);
   };
 
-  document.getElementById("btn_start").onclick = () => {
+  $btnStart.onclick = () => {
     $input.click();
   };
 
@@ -232,7 +242,7 @@ function main() {
 
   let dragCounter = 0;
   function updateDragCounter(delta) {
-    dragCounter += delta;
+    dragCounter = Math.max(dragCounter + delta, 0);
     document.body.classList.toggle("dragging", dragCounter > 0);
   }
 
@@ -247,6 +257,11 @@ function main() {
   }
 
   document.body.addEventListener("dragenter", (e) => {
+    if (getInProgress()) {
+      e.preventDefault();
+      return;
+    }
+
     updateDragCounter(+1);
     handleDragEffect(e);
     e.preventDefault();

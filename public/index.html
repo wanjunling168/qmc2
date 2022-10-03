@@ -14,22 +14,33 @@
       <h1>QMC2-WASM <small>(实验性)</small></h1>
     </header>
 
-    <main>
-      <p>用于解密 <code>mflac</code> 与 <code>mgg</code> 文件的小工具。</p>
+    <main id="app" data-decoded="true" data-file-loaded="false">
+      <p>一个用于解密 <code>mflac</code>/<code>mgg</code> 文件的小工具</p>
       <p>
         <label>
           <input type="file" id="input" />
           <button type="button" id="btn_start">选择需要解密的文件</button>
         </label>
+        <br />
+        <span id="dnd-hint">(如果浏览器支持，拖放进来也可以)</span>
       </p>
-      <p><progress id="prog" max="100" value="0"></progress></p>
-      <p><audio id="player" controls></audio></p>
-      <p><a href="#" id="download">没有文件</a></p>
+      <section id="progress">
+        <progress id="prog" max="100" value="0"></progress>
+        <p>正在处理文件，请稍后…</p>
+      </section>
+      <section id="preview-and-download">
+        <p><audio id="player" controls></audio></p>
+        <p>下载：<a href="#" id="download">等待解密…</a></p>
+      </section>
       <hr />
     </main>
 
-    <footer lang="en">
-      <p style="font-style: italic">
+    <footer>
+      <p>
+        <a href="https://github.com/jixunmoe/qmc2/wiki/批量转换">批量转换</a>
+        | <a href="https://github.com/jixunmoe/qmc2/wiki/支持的客户端">支持的客户端</a>
+      </p>
+      <p style="font-style: italic" lang="en">
         Part of
         <a target="_blank" href="https://github.com/jixunmoe/qmc2/">QMC2</a>
         project. <br />
