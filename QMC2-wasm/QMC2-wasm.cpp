@@ -8,12 +8,13 @@
 #include <qmc2-crypto/StreamCencrypt.h>
 
 #include <stddef.h>
+#include <string.h>
 
 StreamCencrypt *createInstWidthEKey(std::string ekey_b64)
 {
   StreamCencrypt *stream = new StreamCencrypt();
   KeyDec *key_dec = new KeyDec();
-  key_dec->SetKey(ekey_b64.c_str(), ekey_b64.size());
+  key_dec->SetKey(ekey_b64.c_str(), strlen(ekey_b64.c_str()));
   stream->SetKeyDec(key_dec);
   delete key_dec;
   return stream;

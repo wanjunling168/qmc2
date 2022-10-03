@@ -109,7 +109,7 @@ async function decryptMGG(mggBlob) {
 
     // 提取嵌入到文件的 EKey
     const ekey = new Uint8Array(
-      mggBlob.slice(decryptedSize, decryptedSize + len - 1)
+      mggBlob.slice(decryptedSize, decryptedSize + len)
     );
 
     // 解码 UTF-8 数据到 string
