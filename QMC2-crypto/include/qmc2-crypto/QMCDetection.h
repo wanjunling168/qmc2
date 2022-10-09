@@ -21,7 +21,7 @@ struct qmc_detection
   // Use 24 here to align to memory.
   char song_id[24];
 
-  char error_msg[40];
+  char error_msg[80];
 };
 
 bool detect_key_end_position(qmc_detection &result, uint8_t *buf, size_t len);
