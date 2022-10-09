@@ -31,6 +31,11 @@ union eof_magic {
 constexpr uint32_t kMagicQTag = 0x67615451; // QTag (LE)
 constexpr uint32_t kMagicSTag = 0x67615453; // STag (LE)
 
+bool is_printable(char c)
+{
+  return c >= 0x20 && c <= 0x7e;
+}
+
 size_t find_comma(uint8_t *buf, size_t start, size_t end)
 {
   for (auto i = start; i < end; i++)
@@ -125,7 +130,7 @@ bool detect_key_end_position(qmc_detection &result, uint8_t *buf, size_t len)
     {
       char c = static_cast<char>(pEndOfFile[i]);
       sprintf(&bufHexEndOfFile[i * 3], "%02x ", c);
-      bufASCIIPrint[i] = isprint(c) ? c : '.';
+      bufASCIIPrint[i] = is_printable(c) ? c : '.';
     }
     sprintf(result.error_msg, "unknown magic: %s(%s)", bufHexEndOfFile, bufASCIIPrint);
   }
