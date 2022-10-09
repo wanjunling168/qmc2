@@ -28,7 +28,8 @@ union eof_magic {
   v2;
 };
 
-const char *MAGIC_QTAG = "QTag";
+constexpr uint32_t kMagicQTag = 0x67615451; // QTag (LE)
+constexpr uint32_t kMagicSTag = 0x67615453; // STag (LE)
 
 size_t find_comma(uint8_t *buf, size_t start, size_t end)
 {
@@ -52,10 +53,17 @@ bool detect_key_end_position(qmc_detection &result, uint8_t *buf, size_t len)
     return false;
   }
 
-  eof_magic eof = *reinterpret_cast<eof_magic *>(&buf[len - sizeof(eof_magic)]);
+  auto pEndOfFile = &buf[len - sizeof(eof_magic)];
+  eof_magic eof = *reinterpret_cast<eof_magic *>(pEndOfFile);
   {
-    if (memcmp(MAGIC_QTAG, &eof.v2.magic, 4) == 0)
+    switch (le32toh(eof.v2.magic))
     {
+    case kMagicSTag:
+      strncpy(result.error_msg, "stag file (Android platform) does not embed decryption keys",
+              sizeof(result.error_msg));
+      return false;
+
+    case kMagicQTag: {
       uint32_t payload_size = static_cast<uint32_t>(be32toh(eof.v2.len));
 
       result.ekey_position = int32_t(len) - 8 - payload_size;
@@ -88,6 +96,7 @@ bool detect_key_end_position(qmc_detection &result, uint8_t *buf, size_t len)
 
       return true;
     }
+    }
     // not v2
   }
 
@@ -110,7 +119,15 @@ bool detect_key_end_position(qmc_detection &result, uint8_t *buf, size_t len)
   }
   else
   {
-    sprintf(result.error_msg, "unknown magic: %08x-%08x", eof.v2.magic, eof.v2.len);
+    char bufHexEndOfFile[8 * 3 + 1] = {0};
+    char bufASCIIPrint[8 + 1] = {0};
+    for (int i = 0; i < 8; i++)
+    {
+      char c = static_cast<char>(pEndOfFile[i]);
+      sprintf(&bufHexEndOfFile[i * 3], "%02x ", c);
+      bufASCIIPrint[i] = isprint(c) ? c : '.';
+    }
+    sprintf(result.error_msg, "unknown magic: %s(%s)", bufHexEndOfFile, bufASCIIPrint);
   }
 
   return false;
