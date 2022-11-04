@@ -116,3 +116,7 @@ progress + p {
 #app[data-file-loaded="true"][data-decoded="false"] #preview-and-download {
   display: none;
 }
+
+audio[type^="video/"] {
+  display: none;
+}
