@@ -23,10 +23,12 @@ static_assert(read_buf_len > footer_detection_size && read_buf_len > encrypted_k
 
 using namespace std;
 
-StreamCencrypt *createInstWidthEKey(const char *ekey_b64)
+StreamCencrypt *createInstWidthEKey(const char *ekey_b64, uint8_t seed, const uint8_t *mix_key_1,
+                                    const uint8_t *mix_key_2)
 {
   StreamCencrypt *stream = new StreamCencrypt();
   KeyDec *key_dec = new KeyDec();
+  key_dec->InitDecryptionKey(seed, mix_key_1, mix_key_2);
   key_dec->SetKey(ekey_b64, strlen(ekey_b64));
   stream->SetKeyDec(key_dec);
   delete key_dec;
@@ -37,13 +39,19 @@ int main(int argc, char **argv)
 {
   fprintf(stderr, "QMC2 decoder (cli) v0.0.8 by Jixun\n\n");
 
-  if (argc < 3)
+  if (argc < 6)
   {
-    fprintf(stderr, "usage: %s <input> <output> [ignored]\n", argv[0]);
+    fprintf(stderr, "usage: %s <seed> <mix_key_1> <mix_key_2> <input> <output> [ignored]\n", argv[0]);
     return 1;
   }
 
-  ifstream stream_input(argv[1], ios::in | ios::binary);
+  auto seed = (uint8_t)atoi(argv[1]);
+  uint8_t mix_key_1[16] = {0};
+  uint8_t mix_key_2[16] = {0};
+  memcpy(mix_key_1, argv[2], 16);
+  memcpy(mix_key_2, argv[3], 16);
+
+  ifstream stream_input(argv[4], ios::in | ios::binary);
   if (stream_input.fail())
   {
     fprintf(stderr, "ERROR: could not open input file %s\n", argv[1]);
@@ -78,9 +86,9 @@ int main(int argc, char **argv)
   stream_input.seekg(decrypted_file_size, ios::beg);
   stream_input.read(reinterpret_cast<char *>(buf), detection.ekey_len);
   buf[detection.ekey_len] = 0;
-  auto stream = createInstWidthEKey(reinterpret_cast<char *>(buf));
+  auto stream = createInstWidthEKey(reinterpret_cast<char *>(buf), seed, mix_key_1, mix_key_2);
 
-  ofstream stream_out(argv[2], ios::out | ios::binary);
+  ofstream stream_out(argv[5], ios::out | ios::binary);
   if (stream_out.fail())
   {
     fprintf(stderr, "ERROR: could not open output file %s\n", argv[2]);
@@ -111,7 +119,7 @@ int main(int argc, char **argv)
     fflush(stderr);
   }
 
-  fprintf(stderr, "ok! saved to %s\n", argv[2]);
+  fprintf(stderr, "ok! saved to %s\n", argv[5]);
 
   delete[] buf;
   return 0;

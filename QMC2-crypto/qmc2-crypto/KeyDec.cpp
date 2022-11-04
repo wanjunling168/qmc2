@@ -37,7 +37,7 @@ KeyDec::KeyDec() : seed(CONST_SIMPLE_KEY_SEED)
   memcpy(mix_key2, DEFAULT_MIX_KEY2, 0x10);
 }
 
-void KeyDec::InitDecryptionKey(uint8_t seed, uint8_t *mix_key1, uint8_t *mix_key2)
+void KeyDec::InitDecryptionKey(uint8_t seed, const uint8_t *mix_key1, const uint8_t *mix_key2)
 {
   this->seed = seed;
   memcpy(this->mix_key1, mix_key1, 0x10);
