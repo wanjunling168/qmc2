@@ -113,6 +113,7 @@ function getInProgress() {
 }
 
 function setInProgress(inProgress) {
+  $player.setAttribute('data-can-play', false);
   $app.setAttribute('data-decoded', !inProgress);
   $btnStart.disabled = $input.disabled = $player.disabled = inProgress;
   if (inProgress) {
@@ -218,6 +219,9 @@ function processFile(file) {
 
 function main() {
   setInProgress(true);
+  $player.addEventListener('canplay', () => {
+    $player.setAttribute('data-can-play', true);
+  });
 
   ///// 加载 QMC2-Crypto 组件
 
