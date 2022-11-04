@@ -12,6 +12,18 @@
 using tars::TC_Base64;
 using tars::TC_Tea;
 
+#ifndef CONST_SIMPLE_KEY_SEED
+#define CONST_SIMPLE_KEY_SEED (0)
+#define CONST_MIX_KEY_1                                                                                                \
+  {                                                                                                                    \
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00                     \
+  }
+#define CONST_MIX_KEY_2                                                                                                \
+  {                                                                                                                    \
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00                     \
+  }
+#endif
+
 void SimpleMakeKey(uint8_t seed, size_t len, uint8_t *buf)
 {
   for (int i = 0; len > i; ++i)
