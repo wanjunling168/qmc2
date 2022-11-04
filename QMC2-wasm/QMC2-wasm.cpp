@@ -10,10 +10,14 @@
 #include <stddef.h>
 #include <string.h>
 
-StreamCencrypt *createInstWidthEKey(std::string ekey_b64)
+StreamCencrypt *createInstWidthEKey(std::string ekey_b64, uint32_t seed, std::string mix_key_1, std::string mix_key_2)
 {
   StreamCencrypt *stream = new StreamCencrypt();
   KeyDec *key_dec = new KeyDec();
+  if (mix_key_1.length() == 16 && mix_key_2.length() == 16)
+  {
+    key_dec->InitDecryptionKey(seed, (uint8_t *)mix_key_1.c_str(), (uint8_t *)mix_key_2.c_str());
+  }
   key_dec->SetKey(ekey_b64.c_str(), strlen(ekey_b64.c_str()));
   stream->SetKeyDec(key_dec);
   delete key_dec;

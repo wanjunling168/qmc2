@@ -111,9 +111,12 @@ export declare interface QMCCrypto extends WASMExportedRuntime {
    * Creates an instance of {@link StreamCencrypt} that can be later used
    *   to decrypt file created using this very key.
    * @param ekey ekey, extracted from the request or end of the file.
+   * @param seed seed to generate simple key.
+   * @param mix_key_1 stage 1 key for EncV2 decryption.
+   * @param mix_key_2 stage 2 key for EncV2 decryption.
    * @returns {StreamCencrypt} a pointer to the encrypt class.
    */
-  createInstWidthEKey(ekey: string): StreamCencrypt;
+  createInstWidthEKey(ekey: string, seed: number, mix_key_1: string, mix_key_2: string): StreamCencrypt;
 
   /**
    * Decrypt

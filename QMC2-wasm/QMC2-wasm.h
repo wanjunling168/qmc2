@@ -20,7 +20,7 @@ bool detectKeyEndPosition(
     /* qmc_detection* */ uintptr_t result,
     /* uin8_t* */ uintptr_t buf, size_t len);
 
-StreamCencrypt *createInstWidthEKey(std::string ekey_b64);
+StreamCencrypt *createInstWidthEKey(std::string ekey_b64, uint32_t seed, std::string mix_key_1, std::string mix_key_2);
 void decryptStream(StreamCencrypt *sc, uintptr_t buf, size_t offset, size_t len);
 
 EMSCRIPTEN_BINDINGS(QMC2_Crypto)
