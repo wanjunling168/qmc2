@@ -135,14 +135,18 @@ const getMagic = (u8) => {
 function fileDetection(u8Array, fileName) {
   const oggMagic = 0x5367674f;
   const flacMagic = 0x43614c66;
-
+  const ftypMP4Magic = 0x3234706D;
   const magic = getMagic(u8Array[0]);
+  const magicFtyp = getMagic(u8Array[8]);
 
   // 未能识别时的返回内容
   let ext = ".bin";
   let mimeType = "application/octet-stream";
 
-  switch (magic) {
+  if (magicFtyp === ftypMP4Magic) {
+    ext = ".mp4";
+    mimeType = "video/mp4";
+  } else switch (magic) {
     case oggMagic:
       ext = ".ogg";
       mimeType = "audio/ogg";
@@ -193,6 +197,7 @@ function processFile(file) {
         });
 
         const url = (lastURL = window.URL.createObjectURL(blob));
+        $player.type = mimeType;
         $player.src = url;
 
         $dl.href = url;
