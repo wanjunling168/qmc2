@@ -12,6 +12,10 @@
 using tars::TC_Base64;
 using tars::TC_Tea;
 
+#if __has_include("qmc2-crypto/KeyDec.local.h")
+#include "qmc2-crypto/KeyDec.local.h"
+#endif
+
 #ifndef CONST_SIMPLE_KEY_SEED
 #define CONST_SIMPLE_KEY_SEED (0)
 #define CONST_MIX_KEY_1                                                                                                \
@@ -23,6 +27,22 @@ using tars::TC_Tea;
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00                     \
   }
 #endif
+
+uint8_t DEFAULT_MIX_KEY1[0x10] = CONST_MIX_KEY_1;
+uint8_t DEFAULT_MIX_KEY2[0x10] = CONST_MIX_KEY_2;
+
+KeyDec::KeyDec() : seed(CONST_SIMPLE_KEY_SEED)
+{
+  memcpy(mix_key1, DEFAULT_MIX_KEY1, 0x10);
+  memcpy(mix_key2, DEFAULT_MIX_KEY2, 0x10);
+}
+
+void KeyDec::InitDecryptionKey(uint8_t seed, uint8_t *mix_key1, uint8_t *mix_key2)
+{
+  this->seed = seed;
+  memcpy(this->mix_key1, mix_key1, 0x10);
+  memcpy(this->mix_key2, mix_key2, 0x10);
+}
 
 void SimpleMakeKey(uint8_t seed, size_t len, uint8_t *buf)
 {
@@ -71,10 +91,7 @@ void KeyDec::SetKey(const char *ekey, const size_t key_size)
   ekey_decoded.resize(decode_len);
 
   uint8_t simple_key_buf[8] = {0};
-  SimpleMakeKey(CONST_SIMPLE_KEY_SEED, 8, simple_key_buf);
-#if _DEBUG
-  // Nothing here.
-#endif
+  SimpleMakeKey(seed, 8, simple_key_buf);
 
   TC_Base64 b64;
   decode_len = b64.decode(ekey, key_size, ekey_decoded.data());
@@ -125,20 +142,17 @@ bool KeyDec::isEncV2(std::vector<uint8_t> &key)
 
 bool KeyDec::DecryptV2Key(std::vector<uint8_t> &key)
 {
-  char MixKey1[] = CONST_MIX_KEY_1;
-  char MixKey2[] = CONST_MIX_KEY_2;
-
   std::vector<char> decode_key_1;
   std::vector<char> decode_key_2;
   TC_Tea tea;
-  if (!tea.decrypt(MixKey1, reinterpret_cast<char *>(key.data()) + 18, key.size() - 18, decode_key_1))
+  if (!tea.decrypt((const char *)mix_key1, reinterpret_cast<char *>(key.data()) + 18, key.size() - 18, decode_key_1))
   {
     key.resize(0);
     fprintf(stderr, "ERROR: EncV2 stage 1 key decode failed.\n");
     return false;
   }
 
-  if (!tea.decrypt(MixKey2, decode_key_1.data(), decode_key_1.size(), decode_key_2))
+  if (!tea.decrypt((const char *)mix_key2, decode_key_1.data(), decode_key_1.size(), decode_key_2))
   {
     key.resize(0);
     fprintf(stderr, "ERROR: EncV2 stage 2 key decode failed.\n");
