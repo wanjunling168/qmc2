@@ -137,7 +137,7 @@ function fileDetection(u8Array, fileName) {
   const flacMagic = 0x43614c66;
   const ftypMP4Magic = 0x3234706D;
   const magic = getMagic(u8Array[0]);
-  const magicFtyp = getMagic(u8Array[8]);
+  const magicFtyp = getMagic(u8Array[0].slice(8, 12));
 
   // 未能识别时的返回内容
   let ext = ".bin";
