@@ -22,7 +22,7 @@
           <button type="button" id="btn_start">选择需要解密的文件</button>
         </label>
         <br />
-        <span id="dnd-hint">(如果浏览器支持，拖放进来也可以)</span>
+        <span id="dnd-hint" class="hint">(如果浏览器支持，拖放进来也可以)</span>
       </p>
       <section id="progress">
         <progress id="prog" max="100" value="0"></progress>
@@ -32,6 +32,38 @@
         <p><audio id="player" controls></audio></p>
         <p>下载：<a href="#" id="download">等待解密…</a></p>
       </section>
+
+      <details id="decryption-config" open>
+        <summary>解密设定</summary>
+
+        <p>
+          <label>
+            密钥解密种子
+            <br />
+            <input type="text" id="decryption_seed" value="0" type="number">
+          </label>
+        </p>
+        <p>
+          <label>
+            混淆密钥 1 (16 字节)
+            <br />
+            <textarea id="mix_key_1">0x00, 0x00, 0x00, ...</textarea>
+          </label>
+        </p>
+        <p>
+          <label>
+            混淆密钥 2 (16 字节)
+            <textarea id="mix_key_2">0x00, 0x00, 0x00, ...</textarea>
+          </label>
+        </p>
+        <p style="text-align: center">
+          <button id="config-clear" type="button">清空设定</button>
+          <button id="config-save"  type="button">储存设定</button>
+          <br>
+          <i class="hint">设定储存后，下次访问将自动读取。</i>
+        </p>
+      </details>
+
       <hr />
     </main>
 

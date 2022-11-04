@@ -66,7 +66,8 @@ const DECRYPTION_BUF_SIZE = 2 * 1024 * 1024;
     const ekey_b64 = decoder.decode(ekey);
 
     // 初始化加密与缓冲区
-    const hCrypto = QMCCrypto.createInstWidthEKey(ekey_b64);
+    const { seed, mixKey1, mixKey2 } = parseConfig();
+    const hCrypto = QMCCrypto.createInstWidthEKey(ekey_b64, seed, mixKey1, mixKey2);
     const buf = QMCCrypto._malloc(DECRYPTION_BUF_SIZE);
 
     const decryptedParts = [];
@@ -107,6 +108,53 @@ const $input = document.getElementById("input");
 const $dl = document.getElementById("download");
 const $player = document.getElementById("player");
 const $btnStart = document.getElementById("btn_start");
+const $btnClearConfig = document.getElementById("config-clear");
+const $btnSaveConfig = document.getElementById("config-save");
+const $decryptionConfig = document.getElementById("decryption-config");
+const $seed = document.getElementById("decryption_seed");
+const $mixKey1 = document.getElementById("mix_key_1");
+const $mixKey2 = document.getElementById("mix_key_2");
+
+function parseKeyFromHex(str, targetSize = 16) {
+  let hexArray = [];
+  str.replace(/0x([0-9a-fA-F]{2})/g, (_, code) => hexArray.push(String.fromCharCode(parseInt(code, 16))));
+  while (hexArray.length < targetSize) {
+    hexArray.push('\x00');
+  }
+  return hexArray.join('').slice(0, targetSize);
+}
+
+function parseConfig() {
+  const seed = parseInt($seed.value);
+  const mixKey1 = parseKeyFromHex($mixKey1.value, 16);
+  const mixKey2 = parseKeyFromHex($mixKey2.value, 16);
+
+  return { seed, mixKey1, mixKey2 };
+}
+
+function reloadConfig() {
+  try {
+    const { seed, mixKey1, mixKey2 } = JSON.parse(localStorage.getItem('_qmc2_config'));
+    $seed.value = seed;
+    $mixKey1.value = mixKey1;
+    $mixKey2.value = mixKey2;
+    return true;
+  } catch (e) {
+    $seed.value = 0;
+    $mixKey1.value = '0x00, 0x00, 0x00, ...';
+    $mixKey2.value = '0x00, 0x00, 0x00, ...';
+  }
+}
+
+function saveConfig() {
+  const seed = $seed.value;
+  const mixKey1 = $mixKey1.value;
+  const mixKey2 = $mixKey2.value;
+
+  localStorage.setItem('_qmc2_config', JSON.stringify({
+    seed, mixKey1, mixKey2
+  }));
+}
 
 function getInProgress() {
   return $app.getAttribute('data-decoded') === 'false';
@@ -289,6 +337,21 @@ function main() {
   document.body.addEventListener("dragleave", () => {
     updateDragCounter(-1);
   });
+
+  $btnClearConfig.onclick = () => {
+    localStorage.setItem('_qmc2_config', 'null');
+    reloadConfig();
+    alert("设定已清除。");
+  };
+
+  $btnSaveConfig.onclick = () => {
+    saveConfig();
+    alert("设定已储存。");
+  };
+
+  if (reloadConfig()) {
+    $decryptionConfig.open = false;
+  }
 }
 
 main();

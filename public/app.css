@@ -6,8 +6,8 @@ body {
   min-height: 100vh;
 }
 
-code {
-  font-family: "Courier New", Courier, monospace;
+code, input, textarea {
+  font-family: "Source Code Pro", "Consolas", "Microsoft YaHei UI", monospace;
 }
 
 h1 {
@@ -29,7 +29,7 @@ footer {
   font-size: smaller;
 }
 
-input {
+input[type="file"] {
   display: none;
 }
 
@@ -95,7 +95,7 @@ a:hover {
   color: #29527A;
 }
 
-#dnd-hint {
+.hint {
   color: #aaa;
   font-size: smaller;
 }
@@ -119,4 +119,27 @@ progress + p {
 
 #player[data-can-play="false"] {
   display: none;
+}
+
+details {
+  text-align: left;
+  
+  border: 1px solid #ccc;
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+  margin-bottom: 2em;
+}
+
+details > *:last-child {
+  margin-bottom: 0;
+}
+
+textarea {
+  text-align: left;
+  width: 100%;
+  min-height: 5em;
+}
+
+summary {
+  cursor: pointer;
 }
