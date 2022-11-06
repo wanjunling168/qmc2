@@ -11,6 +11,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <string>
 
 // 1M buffer
@@ -26,12 +27,14 @@ using namespace std;
 StreamCencrypt *createInstWidthEKey(const char *ekey_b64, uint8_t seed, const uint8_t *mix_key_1,
                                     const uint8_t *mix_key_2)
 {
-  StreamCencrypt *stream = new StreamCencrypt();
-  KeyDec *key_dec = new KeyDec();
+  auto key_dec = std::make_unique<KeyDec>();
   key_dec->InitDecryptionKey(seed, mix_key_1, mix_key_2);
-  key_dec->SetKey(ekey_b64, strlen(ekey_b64));
-  stream->SetKeyDec(key_dec);
-  delete key_dec;
+  if (!key_dec->SetKey(ekey_b64, strlen(ekey_b64)))
+  {
+    return nullptr;
+  }
+  StreamCencrypt *stream = new StreamCencrypt();
+  stream->SetKeyDec(key_dec.get());
   return stream;
 }
 
@@ -87,6 +90,11 @@ int main(int argc, char **argv)
   stream_input.read(reinterpret_cast<char *>(buf), detection.ekey_len);
   buf[detection.ekey_len] = 0;
   auto stream = createInstWidthEKey(reinterpret_cast<char *>(buf), seed, mix_key_1, mix_key_2);
+  if (!stream)
+  {
+    fprintf(stderr, "ERROR: could not parse embed_key\n");
+    return 1;
+  }
 
   ofstream stream_out(argv[5], ios::out | ios::binary);
   if (stream_out.fail())

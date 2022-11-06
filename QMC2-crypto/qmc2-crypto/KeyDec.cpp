@@ -82,7 +82,7 @@ void KeyDec::GetKey(uint8_t *&key_out, size_t &key_len_out)
   }
 }
 
-void KeyDec::SetKey(const char *ekey, const size_t key_size)
+bool KeyDec::SetKey(const char *ekey, const size_t key_size)
 {
   Uninit();
   size_t decode_len = key_size / 4 * 3 + 4;
@@ -100,7 +100,7 @@ void KeyDec::SetKey(const char *ekey, const size_t key_size)
   if (decode_len < 8)
   {
     fprintf(stderr, "ERROR: decoded key size is too small, got %x.\n", int(decode_len));
-    return;
+    return false;
   }
 
   if (isEncV2(ekey_decoded))
@@ -108,7 +108,7 @@ void KeyDec::SetKey(const char *ekey, const size_t key_size)
     if (!DecryptV2Key(ekey_decoded))
     {
       fprintf(stderr, "ERROR: decode EncV2 failed.\n");
-      return;
+      return false;
     }
 
     decode_len = ekey_decoded.size();
@@ -129,10 +129,14 @@ void KeyDec::SetKey(const char *ekey, const size_t key_size)
   // Copy the rest
   std::vector<char> decrypted_buf;
   TC_Tea tea;
-  tea.decrypt(reinterpret_cast<const char *>(tea_key), reinterpret_cast<const char *>(ekey_decoded.data()) + 8,
-              decode_len - 8, decrypted_buf);
+  if (!tea.decrypt(reinterpret_cast<const char *>(tea_key), reinterpret_cast<const char *>(ekey_decoded.data()) + 8,
+                   decode_len - 8, decrypted_buf))
+  {
+    return false;
+  };
   key_len = decrypted_buf.size() + 8;
   memcpy(&key[8], decrypted_buf.data(), decrypted_buf.size());
+  return true;
 }
 
 bool KeyDec::isEncV2(std::vector<uint8_t> &key)

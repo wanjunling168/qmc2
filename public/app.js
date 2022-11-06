@@ -68,6 +68,9 @@ const DECRYPTION_BUF_SIZE = 2 * 1024 * 1024;
     // 初始化加密与缓冲区
     const { seed, mixKey1, mixKey2 } = parseConfig();
     const hCrypto = QMCCrypto.createInstWidthEKey(ekey_b64, seed, mixKey1, mixKey2);
+    if (!hCrypto) {
+      throw new Error("could not create decryptor with ekey.");
+    }
     const buf = QMCCrypto._malloc(DECRYPTION_BUF_SIZE);
 
     const decryptedParts = [];

@@ -10,7 +10,7 @@ public:
   ~KeyDec();
 
   virtual void GetKey(uint8_t *&key, size_t &key_size) override;
-  virtual void SetKey(const char *key, const size_t key_size) override;
+  virtual bool SetKey(const char *key, const size_t key_size) override;
   void InitDecryptionKey(uint8_t seed, const uint8_t *mix_key1, const uint8_t *mix_key2);
 
 private:
