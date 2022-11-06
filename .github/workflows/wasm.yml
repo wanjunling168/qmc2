@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    name: "Build WASM"
+    name: "🏗️ Build WASM"
     runs-on: ubuntu-latest
     steps:
       - name: 🛎️ Checkout
@@ -27,13 +27,14 @@ jobs:
           npm ci
           npm run build:doc
           cp -R docs "$PUBLIC_DIR"
-      - name: Upload GitHub Pages artifact
+      - name: 🚁 Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v1.0.4
         with:
           path: public
           retention-days: 3
 
   deploy:
+    name: "✈️ Deploy QMC2-WASM..."
     needs: build
     runs-on: ubuntu-22.04
 
@@ -47,6 +48,6 @@ jobs:
       id-token: write # to verify the deployment originates from an appropriate source
 
     steps:
-      - name: Deploy to GitHub Pages
+      - name: 🚀 Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
