@@ -6,6 +6,8 @@
 
 注意：工具不包含 key。你需要在编译时添加构建参数，或更改 `KeyDec.cpp` 后进行编译。
 
+后续开发请关注 [libparakeet] 项目。
+
 ## 构建
 
 同仓库的 submodule 一同克隆，然后在终端构建：
@@ -74,6 +76,8 @@ npm i @jixun/qmc2-crypto
 # English
 
 Decryptor for files with `mflac` / `mgg1` extension.
+
+For future development, checkout the [libparakeet] project instead.
 
 ## Build
 
@@ -149,3 +153,4 @@ See [package readme][npm_readme] and [usage document][npm_usage] for details.
 [npm_usage]: https://jixunmoe.github.io/qmc2/source.html
 [zeroclear_unlock_mflac]: https://github.com/zeroclear/unlock-mflac-20220931
 [wiki_batch_convert]: https://github.com/jixunmoe/qmc2/wiki/批量转换
+[libparakeet]: https://github.com/parakeet-rs/libparakeet
